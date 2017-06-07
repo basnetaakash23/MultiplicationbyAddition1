@@ -1,0 +1,147 @@
+
+#include <iostream>
+#include <sstream>
+
+using namespace std;
+
+int multiplyLargeNumbers(int* first_number,
+                         int first_number_length,
+                         int* second_number,
+                         int second_number_length,
+                         int* result) {
+  // Now write your code here to multiply the two numbers
+  // and write the result to result, and return its number
+  // of digits.
+   int length_first = first_number_length;
+   int length_second = second_number_length;
+   int carry_over, temp_mult;
+   int carry_over = 0;
+   int third_number[2];
+   int fourth_number[length_first][length_second];                   // fourth array to store the value after multiplication
+   
+  for(int j = length_second; j>=0; j--){
+    for(int i = 0; i< length_first; i++){
+
+        temp_mult = first_nunmber[i]*second_number[j] + carry_over;        
+                                            // temp_mult varibale is used to store temporary value of multiplication
+        if(temp_mult>9){   
+                                              //if temp_mult value is greater than 9 then it needs to separate the carry_over from the value thats going to stay
+          readNumberAsArrayFromString(temp_mult, third_number);
+          carry_over = third_number[1];
+          fourth_number[j][i] = third_number[0];
+        }
+        else{
+          carry_over = 0;
+          fourth_number[j][i] = temp_mult;
+        }
+
+      shift(fourth_number);
+    }
+
+   }
+  return 0;
+}
+
+int shift(int* fourth_number ){
+  
+  int rows = sizeof fourth_number / sizeof fourth_number[0];
+  int cols = sizeof fourth_number[0] / sizeof(int);
+
+  int new_length_of_array = rows+cols-1;
+  int new_array[new_length_of_array][new_length_of_array];
+
+  for(int i = 0; i<new_length_of_array; i++){
+    for(int j = new_length_of_array; j>=0; j--){
+      num_front_zero = new_length_of_array -  rows + i;
+      num_back_zero = i;
+
+      for(int n = 0; n<num_front_zero;n++){
+        new_array[i][n] = 0;
+      }
+
+      for(int n = new_length_of_array-i; n<new_length_of_array;n++){
+        if(i==0){
+          break;
+        }
+
+        else{
+          new_array[i][n] = 0;
+        }
+      }
+
+      for(n = num_of_front_zero; n<= new_length_of_array-i1;n--){
+        new_array[i][n] = fourth_number[i][j];
+      }
+      
+      }
+    }
+}
+
+// This function parses a number as a string, saves each digit
+// in the num_array that is passed in, low-digits first, and
+// returns the number of digits in that number.
+// If we can't parse the number, returns -1.
+// Example: If num_as_string = "1234",
+//          then num_array[] = {4, 3, 2, 1} and
+//          the return value is 4.
+int readNumberAsArrayFromString(const string& num_as_string,
+                                int* num_array) {
+  for (int i = 0; i < num_as_string.length(); ++i) {
+    if (num_as_string[i] >= '0' &&
+        num_as_string[i] <= '9') {
+      num_array[i] = static_cast<int>(num_as_string[i] - '0');
+    } else {
+      return -1;
+    }
+  }
+  return num_as_string.length();
+}
+
+// Takes a number represented as an array with its digits,
+// low to heigh, as well as its length (i.e. number of digits)
+// and return a string representation of that number.
+string numberAsArrayToString(int* num_array, int length) {
+  if (length <= 0 ) {
+    return "NaN";
+  }
+  string num_string;
+  for (int i = 0; i < length; ++i) {
+    num_string += static_cast<char>(num_array[i] + '0');
+  }
+  return num_string;
+}
+
+int main() {
+  int first_number[10000];
+  int second_number[10000];
+  int first_number_length, second_number_length;
+  cout << "Let's multiply two numbers." << endl;
+  {
+    cout << "Please enter the first number: ";
+    string first_number_as_string;
+    cin >> first_number_as_string;
+    first_number_length = readNumberAsArrayFromString(
+        first_number_as_string,
+        first_number);
+  }
+  {
+    cout << "Please enter the second number: ";
+    string second_number_as_string;
+    cin >> second_number_as_string;
+    second_number_length = readNumberAsArrayFromString(
+        second_number_as_string,
+        second_number);
+  }
+
+  cout << "First number is : " << numberAsArrayToString(first_number, first_number_length) << endl;
+  cout << "Second number is : " << numberAsArrayToString(second_number, second_number_length) << endl;
+
+  int result[20000];
+  int result_length =
+      multiplyLargeNumbers(first_number, first_number_length,
+                           second_number, second_number_length,
+                           result);
+
+  cout << "Result: " << numberAsArrayToString(result, result_length) << endl;
+  return 0;
+}
